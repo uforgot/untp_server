@@ -6,7 +6,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "is-server": "node ./server/server.js"
   },
   "dependencies": {
     "react": "^19.1.1",
@@ -31,6 +32,8 @@
     "html-react-parser": "^5.2.6",
     "postcss-nested": "^7.0.2",
     "prettier": "^3.6.2",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
     "tailwindcss": "^4.1.13",
     "three": "^0.180.0",
     "typescript": "~5.9.3",
