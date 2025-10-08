@@ -1,9 +1,12 @@
 import * as THREE from 'three';
 import fragmentShader from '@/interactive/stage/interactive.stage.fragment_4.glsl?raw';
 import vertexShader from '@/interactive/stage/interactive.stage.vertex.glsl?raw';
-import { MeshBasicMaterial } from 'three';
+import { MeshBasicMaterial, type TypedArray } from 'three';
+import Address from '@/address.ts';
+import Constant from '@/constant/constant.ts';
 
 export default class InteractiveStage {
+  private intervalId = 0;
   private time = 0;
   private audioCtx: AudioContext | undefined;
   private analyser: AnalyserNode | undefined;
@@ -14,7 +17,12 @@ export default class InteractiveStage {
   private renderer: THREE.WebGLRenderer | undefined;
   private uniforms: { [key: string]: { value: any } } | undefined;
 
-  constructor(private el: HTMLDivElement) {}
+  private data: Array<THREE.DataTexture> | undefined;
+  private dataIndex = 0;
+
+  constructor(private el: HTMLDivElement) {
+    Address.getInstance().setInteractiveStage(this);
+  }
 
   public init(): void {
     const audioCtx = new window.AudioContext();
@@ -22,6 +30,20 @@ export default class InteractiveStage {
       this.setMic();
       console.log('Playback resumed successfully');
     });
+  }
+
+  public setData(data: Array<any>) {
+    console.log(data);
+    this.data = data;
+    this.dataIndex = 0;
+  }
+
+  public setRestoreMic(): void {
+    if (!this.analyser) return;
+    if (!this.audioData) return;
+    if (!this.uniforms) return;
+
+    this.dataIndex = 0;
   }
 
   private setMic(): void {
@@ -121,25 +143,25 @@ export default class InteractiveStage {
       this.el.getBoundingClientRect().width,
       this.el.getBoundingClientRect().height
     );
-    this.renderer.setAnimationLoop(this.animate);
+    // this.renderer.setAnimationLoop(this.animate);
     this.el.appendChild(this.renderer.domElement);
-
-    window.addEventListener('resize', this.onResizeHandler)
+    this.intervalId = window.setInterval(this.animate, 1000 / Constant.FPS);
+    window.addEventListener('resize', this.onResizeHandler);
   }
 
-  private onResizeHandler = ()=> {
+  private onResizeHandler = () => {
     if (!this.renderer) return;
     if (!this.uniforms) return;
     this.renderer.setSize(
-        this.el.getBoundingClientRect().width,
-        this.el.getBoundingClientRect().height
-    )
-    this.uniforms.iResolution.value.set(
-        this.el.getBoundingClientRect().width,
-        this.el.getBoundingClientRect().height,
-        1
+      this.el.getBoundingClientRect().width,
+      this.el.getBoundingClientRect().height
     );
-  }
+    this.uniforms.iResolution.value.set(
+      this.el.getBoundingClientRect().width,
+      this.el.getBoundingClientRect().height,
+      1
+    );
+  };
 
   private animate = () => {
     if (this.renderer === undefined) return;
@@ -156,13 +178,31 @@ export default class InteractiveStage {
       this.el.getBoundingClientRect().height,
       1
     );
-    this.uniforms.iChannel0.value.needsUpdate = true;
+
+    if (this.data) {
+      this.uniforms.iChannel0.value = new THREE.DataTexture(
+        //@ts-ignore
+        this.data[this.dataIndex],
+        this.analyser.fftSize / 2,
+        1,
+        THREE.RedFormat,
+        THREE.UnsignedByteType
+      );
+      this.uniforms.iChannel0.value.needsUpdate = true;
+      this.dataIndex++;
+      if (this.dataIndex >= this.data.length) this.setRestoreMic();
+    } else {
+      // this.uniforms.iChannel0.value.needsUpdate = true;
+    }
+
     this.renderer.render(this.scene, this.camera);
   };
 
   public destroy(): void {
+    window.clearInterval(this.intervalId);
+
     if (this.renderer) {
-      this.renderer.setAnimationLoop(null);
+      // this.renderer.setAnimationLoop(null);
       this.el.removeChild(this.renderer.domElement);
       this.renderer.dispose();
       this.renderer = undefined;

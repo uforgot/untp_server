@@ -7,7 +7,10 @@ io.on('connection', (socket) => {
 
   // c -> s
   socket.on('s', (data) => {
-    console.log(data);
     socket.broadcast.emit('r', data);
   });
+});
+
+io.on('disconnect', () => {
+  console.log('disconnected');
 });

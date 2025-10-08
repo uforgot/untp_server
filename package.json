@@ -3,11 +3,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --port 5100",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "is-server": "node ./server/server.js"
+    "socket-server": "node ./server/server.js"
   },
   "dependencies": {
     "react": "^19.1.1",
