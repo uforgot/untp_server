@@ -81,7 +81,7 @@ export default class CoreBackground extends React.Component<IProps> {
               'block absolute left-0 top-0 w-full h-full backdrop-blur-2xl'
             }
           />
-          <div className={'z-[1005] p-5 border-2 border-white'}>
+          <div className={'z-[1005] p-4 border-2 border-white'}>
             Start Server
           </div>
         </div>
