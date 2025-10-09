@@ -10,6 +10,13 @@ class Address {
 
   private constructor() {
     this.setSocket();
+
+    window.addEventListener('keydown', (event: KeyboardEvent) => {
+      if (event.key === 'f') {
+        const el = document.querySelector('main');
+        el?.requestFullscreen().then(() => {});
+      }
+    });
   }
 
   private setSocket() {

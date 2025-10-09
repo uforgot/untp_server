@@ -74,6 +74,8 @@ export default class CoreBackground extends React.Component<IProps> {
           onClick={() => {
             this.setState({ isInit: true });
             this.stage?.init();
+            const el = document.querySelector('main');
+            el?.requestFullscreen().then(() => {});
           }}
         >
           <div
