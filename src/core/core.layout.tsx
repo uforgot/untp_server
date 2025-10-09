@@ -7,7 +7,7 @@ export default function CoreLayout({
   children: React.ReactNode;
 }) {
   return (
-    <main>
+    <main className={'absolute left-0 top-0 w-full h-full overflow-hidden'}>
       <CoreBackground />
       <div className={'relative z-20'}>{children}</div>
       <div
