@@ -68,14 +68,23 @@ export default class CoreBackground extends React.Component<IProps> {
         />
         <div
           className={
-            'absolute left-0 top-0 w-full h-full bg-black opacity-90 z-[1000]'
+            'absolute left-0 top-0 w-full h-full opacity-100 z-[1000] flex justify-center items-center cursor-pointer'
           }
-          style={this.state.isInit ? { display: 'none' } : { display: 'block' }}
+          style={this.state.isInit ? { display: 'none' } : { display: 'flex' }}
           onClick={() => {
             this.setState({ isInit: true });
             this.stage?.init();
           }}
-        />
+        >
+          <div
+            className={
+              'block absolute left-0 top-0 w-full h-full backdrop-blur-2xl'
+            }
+          />
+          <div className={'z-[1005] p-5 border-2 border-white'}>
+            Start Server
+          </div>
+        </div>
       </div>
     );
   }
