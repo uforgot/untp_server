@@ -19,11 +19,11 @@ export default function CoreLayout({
       if (!transitionEl) return;
       setTimeout(() => {
         transitionEl.style.transition = 'none';
-        transitionEl.style.transform = 'translateY(200%)';
+        transitionEl.style.transform = 'translateY(-200%)';
       }, 50);
       setTimeout(() => {
         transitionEl.style.transition = 'transform 5.0s ease-in-out';
-        transitionEl.style.transform = 'translateY(-200%)';
+        transitionEl.style.transform = 'translateY(200%)';
       }, 70);
     };
 
@@ -40,7 +40,7 @@ export default function CoreLayout({
       <CoreBackground />
       <div className={'relative z-20'}>{children}</div>
       <div
-        className={'absolute left-0 top-0 w-full h-full overflow-hidden z-150'}
+        className={'absolute left-0 top-0 w-full h-full overflow-hidden z-300'}
       >
         <div
           ref={refTransitionEl}
