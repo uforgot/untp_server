@@ -4,6 +4,7 @@ import type InteractiveStage from '@/interactive/interactive.stage.ts';
 import type { DefaultEventsMap } from '@socket.io/component-emitter';
 
 class Address {
+  public static EVENT_TRANSITION_PLAY = 'event_transition_play';
   private static instance: Address;
   public interactiveStage: InteractiveStage | undefined;
   private webSocket: Socket<DefaultEventsMap, DefaultEventsMap> | undefined;
@@ -35,7 +36,10 @@ class Address {
           tmpData.push(new Uint8Array(item));
         });
 
-        this.interactiveStage?.setData(tmpData);
+        window.setTimeout(() => {
+          this.interactiveStage?.setData(tmpData);
+        }, 2500);
+        window.dispatchEvent(new Event(Address.EVENT_TRANSITION_PLAY));
       });
     });
   }
